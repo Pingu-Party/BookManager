@@ -41,7 +41,7 @@ In order to run the application, the following software components are required:
 We highly recommend to install all components at once by using a full AMP stack distribution, for example as provided by [XAMPP](https://www.apachefriends.org).
  For the development of this application, XAMPP 7.2.28 was used.
 
-## Installation procedure
+## Installation guide
 1. Install all required components, i.e. a HTTP server, PHP and a MySQL database
 2. Download and extract the [lastest release](https://github.com/Pingu-Party/BookManager/releases) or just clone this repository
 3. Move all downloaded files into the document folder of your HTTP server (e.g. into `htdocs/`)
