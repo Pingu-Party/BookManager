@@ -36,7 +36,7 @@ For basic setup, [HTML5 Boilerplate 7.3.0](https://html5boilerplate.com) was use
 In order to run the application, the following software components are required:
 - A HTTP server, e.g. [Apache HTTP server](https://httpd.apache.org/)
 - [PHP](https://www.php.net) 5.6 or newer
-- [MySQL database](https://www.mysql.com) with MyISAM engine, older versions might work as well
+- [MySQL database](https://www.mysql.com), older versions might work as well
 
 We highly recommend to install all components at once by using a full AMP stack distribution, for example as provided by [XAMPP](https://www.apachefriends.org).
  For the development of this application, XAMPP 7.2.28 was used.
