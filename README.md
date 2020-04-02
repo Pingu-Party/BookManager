@@ -46,14 +46,15 @@ We highly recommend to install all components at once by using a full AMP stack 
 2. Download and extract the [lastest release](https://github.com/Pingu-Party/BookManager/releases) or just clone this repository
 3. Move all downloaded files into the document folder of your HTTP server (e.g. into `htdocs/`)
 4. Start the MySQL database and setup a new database for the Book Manager application
-5. Import the schema file located in `/schema` into this database. On success, two new tables will be created.
-6. Edit the `template.htaccess` file located in the root folder and specify the following environment variables:
+5. Import the schema file [`db_schema/schema.sql`](https://github.com/Pingu-Party/BookManager/blob/master/db_schema/schema.sql) into this database. On success, two new tables will be created.
+6. Edit the [`template.htaccess`](https://github.com/Pingu-Party/BookManager/blob/master/template.htaccess) file located in the root folder and specify the following environment variables:
    - `CI_ENV`: Whether the application is supposed to run in `production` or `development` mode, mainly controlling the produced debug output
    - `BASE_URL`: The base URL under which the application will be available, required for proper linking
    - `DB_HOST`: The host name of the MySQL database to use
    - `DB_USER`: The name of the database user to use
    - `DB_PASS`: The password corresponding to the database user to use
    - `DB_NAME`: The name of the database to use
-7. Start the HTTP server
+7. Rename this file to `.htaccess`
+8. Start the HTTP server
 
 Now you should be able to access the application through your HTTP server, e.g. by opening [http;//localhost](http://localhost) in your web browser.
