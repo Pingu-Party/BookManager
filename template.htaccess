@@ -1,0 +1,12 @@
+RewriteEngine on
+RewriteCond $1 !^(index\.php|assets|robots\.txt)
+RewriteRule ^(.*)$ /index.php/$1 [L]
+
+<IfModule mod_env.c>
+    SetEnv CI_ENV production
+	SetEnv BASE_URL https://my-base-url.com/BookManager
+	SetEnv DB_HOST db.host.com
+	SetEnv DB_USER db_user
+	SetEnv DB_PASS db_pass
+	SetEnv DB_NAME my_db
+</IfModule>
