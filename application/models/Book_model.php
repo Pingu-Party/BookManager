@@ -39,18 +39,11 @@ class Book_model extends CI_Model
             )
         ),
         array(
-            'field' => 'thumbnailURL',
-            'label' => 'Bild-URL',
-            'rules' => 'valid_url',
-            'errors' => array(
-                'valid_url' => 'Die URL des Bildes ist ungültig.',
-            )
-        ),
-        array(
             'field' => 'category',
             'label' => 'Kategorie',
-            'rules' => 'integer',
+            'rules' => 'required|integer',
             'errors' => array(
+                'required' => 'Es muss eine Kategorie angegeben werden.',
                 'integer' => 'Ungültige Kategorie.'
             )
         ),
@@ -72,7 +65,6 @@ class Book_model extends CI_Model
     public $publisher;
     public $publishDate;
     public $pageCount;
-    public $thumbnailURL;
     public $isbn10;
     public $isbn13;
     public $category;
@@ -88,9 +80,6 @@ class Book_model extends CI_Model
 
     public function getBooksByQuery($query)
     {
-        //Escape given query for security
-        //$escaped_query = trim($this->db->escape($query));
-
         //Determine search keywords from query string
         $keywords = preg_split('/\s+/', $query);
 
@@ -117,12 +106,12 @@ class Book_model extends CI_Model
             ));
 
         //Build query
-        $select_string = "books.id, books.title, books.authors, books.publishDate, books.pageCount, books.thumbnailURL, books.location, books.created, books.category AS category_id, categories.name AS category_name";
+        $select_string = "books.id, books.title, books.authors, books.publishDate, books.pageCount, books.location, books.created, books.category AS category_id, categories.name AS category_name";
         $select_string .= ", (";
 
         //Iterate over all keywords to build the select string
         foreach ($keywords as $keyword) {
-            foreach($search_fields as $field){
+            foreach ($search_fields as $field) {
                 $select_string .= "IF(" . $field['field'] . " LIKE '%" . $keyword . "%', " . $field['weight'] . ", 0)";
                 $select_string .= "+";
             }
@@ -147,7 +136,7 @@ class Book_model extends CI_Model
     public function getBooksByCategory($category)
     {
         //Perform query
-        return $this->db->select("id, title, authors, publisher, publishDate, pageCount, thumbnailURL, location, created")
+        return $this->db->select("id, title, authors, publisher, publishDate, pageCount, location, created")
             ->get_where('books', array('category' => $category))->result();
     }
 
@@ -168,7 +157,17 @@ class Book_model extends CI_Model
 
     public function storeBook($book)
     {
-        return $this->db->insert('books', $book);
+        //Create return object
+        $returnObject = new stdClass();
+        $returnObject->success = $this->db->insert('books', $book);
+
+        //Check for success
+        if ($returnObject->success) {
+            //Extend return object for new book id
+            $returnObject->id = $this->db->insert_id();
+        }
+
+        return $returnObject;
     }
 
     public function getBook($book_id)

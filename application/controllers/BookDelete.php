@@ -10,7 +10,10 @@ class BookDelete extends CI_Controller
         $this->output->set_content_type('application/json');
 
         //Try to delete the book
-        $result = $this->Book_model->deleteBook($book_id);
+        $this->Book_model->deleteBook($book_id);
+
+        //Delete thumbnail as well
+        $this->Thumbnail_model->delete($book_id);
 
         //Get number of rows that were affected by this operation
         $affected_rows = $this->db->affected_rows();

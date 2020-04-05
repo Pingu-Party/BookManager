@@ -366,12 +366,12 @@ img.thumbnail {
     vertical-align: middle;
 }
 
-#category-manage-table td input[type="text"]{
+#category-manage-table td input[type="text"] {
     width: 120px;
 }
 
 /* Replacement for broken images */
-.broken-image-stub{
+.broken-image-stub {
     display: inline-block;
     width: 140px;
     height: 160px;
@@ -381,6 +381,29 @@ img.thumbnail {
     text-align: center;
     font-size: 20px;
 }
-.broken-image-stub::after{
+
+.broken-image-stub::after {
     content: "Kein Bild verfügbar";
+}
+
+/* Styles for file upload */
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
 }

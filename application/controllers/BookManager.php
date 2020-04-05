@@ -44,15 +44,21 @@ class BookManager extends CI_Controller
                 $data['invalid'] = true;
             }
         } else {
-            //Fetch validated book data and store it
+            //Fetch validated book data
             $newBook = $this->input->post();
-            $result = $this->Book_model->storeBook($newBook);
 
-            //Check for success and extend passing data for result
-            if (!$result) {
-                $data['dberror'] = true;
-            } else {
+            //Store book data
+            $resultObject = $this->Book_model->storeBook($newBook);
+
+            //Check for success
+            if ($resultObject->success) {
                 $data['success'] = true;
+
+                //Check for thumbnail and process it
+                $this->processThumbnail($resultObject->id, $newBook);
+
+            } else {
+                $data['dberror'] = true;
             }
         }
 
@@ -87,25 +93,55 @@ class BookManager extends CI_Controller
             }
         } else {
             //Fetch validated book data
-            $newBook = $this->input->post();
+            $new_book = $this->input->post();
 
             //Mark book as entered via form
-            $newBook['import'] = 'form';
+            $new_book['import'] = 'form';
 
             //Update book
-            $result = $this->Book_model->updateBook($book_id, $newBook);
+            $result = $this->Book_model->updateBook($book_id, $new_book);
+
+            //Check for thumbnail and process it
+            $this->processThumbnail($book_id);
 
             //Check for success and extend passing data for result
             if (!$result) {
                 $data['dberror'] = true;
             } else {
                 $data['success'] = true;
-                $data['book'] = (object)$newBook;
+                $data['book'] = (object)$new_book;
                 $data['book']->id = $book_id;
             }
         }
 
         //Load view
         $this->load->template('edit', $data);
+    }
+
+    private function processThumbnail($book_id)
+    {
+        //Set upload config
+        $config['upload_path'] = $this->Thumbnail_model->getBasePath();
+        $config['file_name'] = $book_id;
+        $config['overwrite'] = true;
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['max_size'] = 10000;
+        //$config['max_width'] = 2000;
+        //$config['max_height'] = 2000;
+
+        //Load upload library
+        $this->load->library('upload', $config);
+
+        //Process upload and check for success
+        if ($this->upload->do_upload('thumbnail')) {
+            //Success, get upload data
+            $upload_data = $this->upload->data();
+
+            //Try to convert uploaded thumbnail to PNG
+            return $this->Thumbnail_model->convert($upload_data['full_path']);
+        }
+
+        //Failure
+        return false;
     }
 }

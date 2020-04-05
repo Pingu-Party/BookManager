@@ -12,8 +12,6 @@
 
         //Replace
         target.replaceWith(stubElement);
-
-        console.log(event);
     };
 
     //Export as singleton

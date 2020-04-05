@@ -66,7 +66,7 @@ Deletion of categories
         //Delete
         this.delete(categoryID, categoryName, bookNumber, function () {
             //Reload page on callback
-            window.location.replace(window.location.pathname + window.location.search + window.location.hash);
+            window.location.href = window.location.href
         });
     };
 
@@ -112,7 +112,7 @@ Deletion of books
         //Delete
         this.delete(bookID, bookTitle, function () {
             //Reload page on callback
-            location.reload();
+            window.location.href = window.location.href
         });
     };
     BookDeletion.prototype.deleteWithRedirect = function (event, bookID, bookTitle) {
@@ -169,7 +169,7 @@ Table renderer functions
     };
     TableRenderer.prototype.renderBookThumbnail = function (data, type, row) {
         //Render link as image element
-        return '<img class="thumbnail" src="' + data + '" onerror="BrokenImageHandler.handle(event)">';
+        return '<img class="thumbnail" src="' + BASE_PATH + '/assets/book_thumbnail/' + row.id + '.png" onerror="BrokenImageHandler.handle(event)">';
     };
     TableRenderer.prototype.renderBookTitle = function (data, type, row) {
         return '<a href="' + BASE_PATH + "/book/" + row.id + '">' + data + '</a>';
@@ -335,7 +335,6 @@ const initDOM = function () {
         data: [],
         columns: [
             {
-                data: 'thumbnailURL',
                 render: TableRenderer.renderBookThumbnail
             },
             {
@@ -477,6 +476,73 @@ const initDOM = function () {
 
     //Initialize tooltips
     $('[data-toggle="tooltip"]').tooltip();
+
+    /*
+    Image upload
+     */
+    //Triggered on changes to file upload inputs
+    $(document).on('change', '.btn-file :file', function () {
+        let inputElement = $(this);
+
+        //Get name of currently selected file
+        let currentFile = inputElement.val().replace(/\\/g, '/').replace(/.*\//, '');
+
+        //Trigger file select dialog and pass the current file name
+        inputElement.trigger('fileselect', [currentFile]);
+    });
+
+    //Triggered after the user selected an image
+    $('.btn-file :file').on('fileselect', function (event, label) {
+        //Find text element
+        let input = $(this).parents('.input-group').find(':text');
+
+        //Sanity check
+        if (input.length) {
+            //Display file name
+            input.val(label);
+        }
+    });
+
+    //Show preview after an image was selected
+    $(".thumbnail-input").change(function () {
+        //Check if files were selected
+        if ((!this.files) || (!this.files[0])) {
+            return;
+        }
+
+        //Create new file reader for reading the input
+        let fileReader = new FileReader();
+
+        //Display preview after loading the image completed
+        fileReader.onload = (e) => {
+            //Find preview image element
+            let previewImage = $(this).parent().parent().parent().next('img.thumbnail-preview');
+
+            //Set preview and display
+            previewImage.attr('src', e.target.result);
+            previewImage.show();
+        };
+
+        //Read selected image
+        fileReader.readAsDataURL(this.files[0]);
+    });
+
+    //Avoid caching of images marked with class 'no-cache'
+    $('img.no-cache').each(function () {
+        //Get element
+        let img = $(this);
+
+        //Get original source link
+        let origSource = img.attr('src');
+
+        //Sanity check
+        if ((!origSource) || (origSource.trim() === "")) {
+            return;
+        }
+
+        //Replace source and add anti-caching suffix
+        img.attr('src', origSource + '?' + performance.now());
+    });
 };
 
 $(document).ready(initDOM);

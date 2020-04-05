@@ -15,7 +15,7 @@
                 <?php
                 foreach ($newest as $book) {
                     echo '<tr>';
-                    echo '<td><a href="' . base_url() . '/book/' . $book->id . '">' . $book->title . '</a></td>';
+                    echo '<td><a href="' . base_url() . 'book/' . $book->id . '">' . $book->title . '</a></td>';
                     echo '<td>' . $book->authors . '</td>';
                     echo '<td class="row-buttons text-nowrap">';
                     echo '<form action="' . base_url() . 'edit/' . $book->id . '"><button type="submit" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></button></form>';

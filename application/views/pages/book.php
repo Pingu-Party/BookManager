@@ -18,7 +18,8 @@
     <div class="row content">
         <div class="col-sm-2 text-left">
             <div class="thumbnail-container">
-                <img class="img-thumbnail" src="<?= $book->thumbnailURL ?>" onerror="BrokenImageHandler.handle(event)">
+                <img class="img-thumbnail" src="<?= base_url() . 'assets/book_thumbnail/' . $book->id . '.png' ?>"
+                     onerror="BrokenImageHandler.handle(event)">
             </div>
         </div>
         <div class=" col-sm-10 text-left">

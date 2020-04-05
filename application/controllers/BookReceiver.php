@@ -35,21 +35,42 @@ class BookReceiver extends CI_Controller
         //Set import field
         $newBook['import'] = 'receiver';
 
-        //Store book
-        $result = $this->Book_model->storeBook($newBook);
+        //Extract and remove thumbnail URL
+        $thumbnail_url = trim($newBook['thumbnailURL']);
+        unset($newBook['thumbnailURL']);
 
-        //Check for success
-        if ($result) {
-            //Success
-            return $this->output->set_status_header(201)->set_output(json_encode(array(
-                'success' => true
+        //Store book
+        $resultObject = $this->Book_model->storeBook($newBook);
+
+        //Check for failure
+        if (!($resultObject->success)) {
+            return $this->output->set_status_header(500)->set_output(json_encode(array(
+                'success' => false,
+                'error' => "Unerwarteter Fehler beim Schreiben in die Datenbank."
             )));
         }
 
-        //No success
-        return $this->output->set_status_header(500)->set_output(json_encode(array(
-            'success' => false,
-            'error' => "Unerwarteter Fehler beim Schreiben in die Datenbank."
+        //Check if thumbnail available
+        if (!empty($thumbnail_url)) {
+            //Generate target path for thumbnail
+            $target_path = $this->Thumbnail_model->getPath($resultObject->id, '');
+
+            //Download thumbnail
+            $result = file_put_contents($target_path, file_get_contents($thumbnail_url));
+
+            //Check for failure
+            if (!$result) {
+                //Failure, just delete thumbnail remainders if available
+                unlink($target_path);
+            } else {
+                //Success, convert thumbnail if necessary
+                $this->Thumbnail_model->convert($target_path);
+            }
+        }
+
+        //Success
+        return $this->output->set_status_header(201)->set_output(json_encode(array(
+            'success' => true
         )));
     }
 }
