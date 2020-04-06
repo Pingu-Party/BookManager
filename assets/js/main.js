@@ -396,7 +396,7 @@ const initDOM = function () {
         ],
         aLengthMenu: [
             [25, 50, 100, -1],
-            [25, 50, 100, "All"]
+            [25, 50, 100, "Alle"]
         ],
         iDisplayLength: -1,
         language: TableLocalisation.de
