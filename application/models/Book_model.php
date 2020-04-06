@@ -89,6 +89,12 @@ class Book_model extends CI_Model
         //Filter stopwords
         $keywords = filter_stopwords($keywords);
 
+        //Check for remaining keywords
+        if(sizeof($keywords) < 1){
+            //Return empty result
+            return array();
+        }
+
         //Search fields to conduct the search on
         $search_fields = array(
             array(
