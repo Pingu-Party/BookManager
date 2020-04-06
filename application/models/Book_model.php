@@ -80,9 +80,16 @@ class Book_model extends CI_Model
 
     public function getBooksByQuery($query)
     {
+        //Load stopword filter
+        $this->load->helper('stopwords');
+
         //Determine search keywords from query string
         $keywords = preg_split('/\s+/', $query);
 
+        //Filter stopwords
+        $keywords = filter_stopwords($keywords);
+
+        //Search fields to conduct the search on
         $search_fields = array(
             array(
                 "field" => "books.title",
